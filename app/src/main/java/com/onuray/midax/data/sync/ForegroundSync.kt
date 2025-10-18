@@ -17,7 +17,7 @@ class ForegroundSync @Inject constructor(
 ) {
     private val periodMs = 10_000L
 
-    init {
+    fun init() {
         val owner = ProcessLifecycleOwner.get()
 
         owner.lifecycleScope.launch {
