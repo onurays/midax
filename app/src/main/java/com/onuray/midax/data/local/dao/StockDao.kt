@@ -14,7 +14,7 @@ interface StockDao {
     fun observeAll(): Flow<List<StockEntity>>
 
     @Query("SELECT symbol FROM stocks")
-    suspend fun symbolsOnce(): List<String>
+    suspend fun getSymbols(): List<String>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsertAll(items: List<StockEntity>)
