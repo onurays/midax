@@ -1,6 +1,7 @@
 package com.onuray.midax.di
 
 import com.onuray.midax.BuildConfig
+import com.onuray.midax.data.remote.api.StocksApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -54,4 +55,9 @@ object NetworkModule {
             .client(okHttp)
             .addConverterFactory(MoshiConverterFactory.create())
             .build()
+
+    @Provides
+    @Singleton
+    fun provideStocksApi(retrofit: Retrofit): StocksApi =
+        retrofit.create(StocksApi::class.java)
 }
