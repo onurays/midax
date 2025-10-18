@@ -37,10 +37,55 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
-    packagingOptions {
+    packaging {
         resources.excludes.add("META-INF/gradle/incremental.annotation.processors")
         resources.excludes.add("META-INF/androidx/room/room-compiler-processing/LICENSE.txt")
+    }
+
+    flavorDimensions += "tier"
+    productFlavors {
+        create("dev") {
+            dimension = "tier"
+            applicationIdSuffix = ".dev"
+            versionNameSuffix = "-dev"
+
+            val baseUrl = (project.findProperty("MIDAX_DEBUG_BASE_URL") as String?)
+                ?: "https://finnhub.io/api/v1/"
+            val apiKey = (project.findProperty("MIDAX_DEBUG_API_KEY") as String?) ?: ""
+
+            buildConfigField("String", "BASE_URL", "\"$baseUrl\"")
+            buildConfigField("String", "MIDAX_PRO_API_KEY", "\"$apiKey\"")
+
+            manifestPlaceholders["hostName"] = "dev.midax.app"
+        }
+
+        create("pro") {
+            dimension = "tier"
+
+            val baseUrl = (project.findProperty("MIDAX_PRO_BASE_URL") as String?)
+                ?: "https://finnhub.io/api/v1/"
+            val apiKey = (project.findProperty("MIDAX_PRO_API_KEY") as String?) ?: ""
+
+            buildConfigField("String", "MIDAX_PRO_BASE_URL", "\"$baseUrl\"")
+            buildConfigField("String", "MIDAX_PRO_API_KEY", "\"$apiKey\"")
+
+            manifestPlaceholders["hostName"] = "app.midax.com"
+        }
+    }
+
+    buildTypes {
+        debug {
+            isDebuggable = true
+        }
+        release {
+            isMinifyEnabled = true
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
     }
 }
 
