@@ -68,7 +68,7 @@ android {
                 ?: "https://finnhub.io/api/v1/"
             val apiKey = (project.findProperty("MIDAX_PRO_API_KEY") as String?) ?: ""
 
-            buildConfigField("String", "MIDAX_PRO_BASE_URL", "\"$baseUrl\"")
+            buildConfigField("String", "BASE_URL", "\"$baseUrl\"")
             buildConfigField("String", "MIDAX_PRO_API_KEY", "\"$apiKey\"")
 
             manifestPlaceholders["hostName"] = "app.midax.com"
@@ -116,6 +116,10 @@ dependencies {
     implementation(libs.work.runtime)
     implementation(libs.paging.runtime)
     implementation(libs.paging.compose)
+    implementation(libs.androidx.hilt.common)
+    implementation(libs.androidx.hilt.work)
+    kapt(libs.hilt.compiler)
+    kapt(libs.room.compiler)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
