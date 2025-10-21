@@ -61,8 +61,8 @@ private fun Midax() {
                     val viewModel: StockListViewModel = hiltViewModel()
                     StockListScreen(
                         stockListStateFlow = viewModel.uiState,
-                        onItemClick = {
-                            nav.navigate(Routes.StockDetail)
+                        onItemClick = { symbol ->
+                            nav.navigate(Routes.stockDetail(symbol))
                         },
                     )
                 }
