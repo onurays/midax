@@ -26,6 +26,7 @@ interface QuoteDao {
                q.updatedAtSec AS updatedAtSec
         FROM stocks s
         LEFT JOIN quotes q ON s.symbol = q.symbol
+        WHERE q.price > 0
         ORDER BY s.symbol
     """)
     fun observeWithQuotes(): Flow<List<StockWithQuote>>

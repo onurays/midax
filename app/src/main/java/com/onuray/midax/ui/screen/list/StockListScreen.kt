@@ -26,6 +26,9 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.onuray.midax.R
 import kotlinx.coroutines.flow.StateFlow
+import java.math.BigDecimal
+import java.math.RoundingMode
+import java.util.Locale
 
 @Composable
 fun StockListScreen(
@@ -64,13 +67,21 @@ private fun StockRow(
             Text(item.name, style = MaterialTheme.typography.bodyMedium, maxLines = 1)
         }
         Column(horizontalAlignment = Alignment.End) {
-            Text(item.price.toString(), style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold)
+            Text(
+                formatPrice(item.price),
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.SemiBold
+            )
             val color = if (item.isRising) {
                 MaterialTheme.colorScheme.tertiary
             } else {
                 MaterialTheme.colorScheme.error
             }
-            Text(item.change.toString(), style = MaterialTheme.typography.bodySmall, color = color)
+            Text(
+                String.format(Locale.US, "%+.2f%%", item.change),
+                style = MaterialTheme.typography.bodySmall,
+                color = color
+            )
         }
     }
 }
@@ -87,4 +98,10 @@ private fun EmptyLoading() {
             Text(stringResource(R.string.stock_list_empty_message))
         }
     }
+}
+
+private fun formatPrice(price: Double): String {
+    val bd = BigDecimal(price)
+    // TODO. Ask / investigate if it is ok to show 23.456 as 23.46
+    return bd.setScale(2, RoundingMode.HALF_UP).toPlainString()
 }

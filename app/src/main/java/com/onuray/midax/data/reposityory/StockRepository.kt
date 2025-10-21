@@ -18,6 +18,7 @@ class StockRepository @Inject constructor(
     private val stockDao: StockDao,
     private val quoteDao: QuoteDao,
 ) {
+
     private var lastQuotesRefreshMs: Long = 0L
 
     fun observeStocksWithQuotes(): Flow<List<StockWithQuote>> =
@@ -43,7 +44,9 @@ class StockRepository @Inject constructor(
         if (symbols.isEmpty()) return
 
         val quoteEntities = symbols.mapNotNull { s ->
-            runCatching { api.quote(s).toEntity(s) }.getOrNull()
+            runCatching {
+                api.quote(s).toEntity(s)
+            }.getOrNull()
         }
 
         db.withTransaction {

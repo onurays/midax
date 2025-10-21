@@ -18,7 +18,7 @@ import kotlinx.coroutines.withContext
 class ForegroundSync @Inject constructor(
     private val repo: StockRepository
 ) {
-    private val periodMs = 10_000L
+    private val periodMs = 30_000L
 
     fun init() {
         val owner = ProcessLifecycleOwner.get()
@@ -32,7 +32,7 @@ class ForegroundSync @Inject constructor(
 
                 while (isActive) {
                     val ok = runCatching { repo.refreshQuotes() }.isSuccess
-                    delay(if (ok) periodMs else (periodMs * 2).coerceAtMost(5 * periodMs))
+                    delay(if (ok) periodMs else (periodMs * 3).coerceAtMost(10 * periodMs))
                 }
             }
         }

@@ -18,7 +18,7 @@ class QuotesSyncWorker @AssistedInject constructor(
     override suspend fun doWork(): Result {
         return runCatching {
             stockRepository.seedIfEmpty()
-            stockRepository.refreshQuotes(minIntervalMs = 0L)
+            stockRepository.refreshQuotes()
         }.fold(
             onSuccess = { Result.success() },
             onFailure = { Result.retry() }
