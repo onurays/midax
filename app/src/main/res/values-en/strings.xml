@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">Midax</string>
     <string name="main_top_bar_title">Midax</string>
-    <string name="stock_list_empty_message">Market verisi hazırlanıyor…</string>
+    <string name="stock_list_empty_message">Preparing market data…</string>
 </resources>

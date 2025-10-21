@@ -1,9 +1,11 @@
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    id("com.google.dagger.hilt.android")
-    id("org.jetbrains.kotlin.kapt")
+    alias(libs.plugins.hilt)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -53,7 +55,10 @@ android {
 
             val baseUrl = (project.findProperty("MIDAX_DEBUG_BASE_URL") as String?)
                 ?: "https://finnhub.io/api/v1/"
-            val apiKey = (project.findProperty("MIDAX_DEBUG_API_KEY") as String?) ?: ""
+            val apiKey = gradleLocalProperties(
+                rootDir,
+                providers = providers
+            ).getProperty("MIDAX_DEBUG_API_KEY")
 
             buildConfigField("String", "BASE_URL", "\"$baseUrl\"")
             buildConfigField("String", "MIDAX_PRO_API_KEY", "\"$apiKey\"")
@@ -66,7 +71,10 @@ android {
 
             val baseUrl = (project.findProperty("MIDAX_PRO_BASE_URL") as String?)
                 ?: "https://finnhub.io/api/v1/"
-            val apiKey = (project.findProperty("MIDAX_PRO_API_KEY") as String?) ?: ""
+            val apiKey = gradleLocalProperties(
+                rootDir,
+                providers = providers
+            ).getProperty("MIDAX_PRO_API_KEY")
 
             buildConfigField("String", "BASE_URL", "\"$baseUrl\"")
             buildConfigField("String", "MIDAX_PRO_API_KEY", "\"$apiKey\"")
@@ -90,8 +98,10 @@ android {
 }
 
 dependencies {
+    implementation(libs.kotlin.stdlib)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.lifecycle.process)
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
@@ -113,13 +123,16 @@ dependencies {
     implementation(libs.retrofit.moshi)
     implementation(libs.moshi.kotlin)
     implementation(libs.coil)
+    implementation(libs.coroutine)
     implementation(libs.work.runtime)
     implementation(libs.paging.runtime)
     implementation(libs.paging.compose)
     implementation(libs.androidx.hilt.common)
     implementation(libs.androidx.hilt.work)
-    kapt(libs.hilt.compiler)
-    kapt(libs.room.compiler)
+    implementation(libs.androidx.hilt.navigation.compose)
+    ksp(libs.hilt.compiler)
+    ksp(libs.room.compiler)
+    ksp(libs.moshi.kotlin.codegen)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -132,4 +145,7 @@ dependencies {
 
 configurations.all {
     exclude(group = "com.intellij", module = "annotations")
+    resolutionStrategy {
+        force(libs.kotlin.stdlib)
+    }
 }

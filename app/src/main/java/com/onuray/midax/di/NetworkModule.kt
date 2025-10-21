@@ -2,6 +2,7 @@ package com.onuray.midax.di
 
 import com.onuray.midax.BuildConfig
 import com.onuray.midax.data.remote.api.StocksApi
+import com.squareup.moshi.Moshi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -20,13 +21,10 @@ object NetworkModule {
     @Provides
     @Singleton
     fun provideAuthInterceptor(): Interceptor = Interceptor { chain ->
-        val original = chain.request()
-        val originalUrl = original.url
-        val newUrl = originalUrl.newBuilder()
-            .addQueryParameter("token", BuildConfig.MIDAX_PRO_API_KEY)
+        val request = chain.request().newBuilder()
+            .addHeader("X-Finnhub-Token", BuildConfig.MIDAX_PRO_API_KEY)
             .build()
-        val newReq = original.newBuilder().url(newUrl).build()
-        chain.proceed(newReq)
+        chain.proceed(request)
     }
 
     @Provides
@@ -49,11 +47,17 @@ object NetworkModule {
         .build()
 
     @Provides @Singleton
-    fun provideRetrofit(okHttp: OkHttpClient): Retrofit =
+    fun provideRetrofit(okHttp: OkHttpClient, moshi: Moshi): Retrofit =
         Retrofit.Builder()
             .baseUrl(BuildConfig.BASE_URL)
             .client(okHttp)
-            .addConverterFactory(MoshiConverterFactory.create())
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .build()
+
+    @Provides
+    @Singleton
+    fun provideMoshi(): Moshi =
+        Moshi.Builder()
             .build()
 
     @Provides

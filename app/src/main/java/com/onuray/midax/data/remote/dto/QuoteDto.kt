@@ -1,7 +1,9 @@
 package com.onuray.midax.data.remote.dto
 
 import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
 
+@JsonClass(generateAdapter = true)
 data class QuoteDto(
     @Json(name = "c") val current: Double?,
     @Json(name = "d") val change: Double?,

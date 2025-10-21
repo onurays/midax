@@ -28,7 +28,7 @@ class StockRepository @Inject constructor(
         if (existing.isNotEmpty()) return
 
         val dtos = api.getSymbols(exchange = "US")
-        val items = dtos.take(limit).map { it.toEntity() }
+        val items = dtos.take(limit).mapNotNull { it.toEntity() }
 
         db.withTransaction {
             stockDao.upsertAll(items)

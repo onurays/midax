@@ -9,13 +9,15 @@ import com.onuray.midax.data.remote.dto.NewsDto
 import com.onuray.midax.data.remote.dto.QuoteDto
 import com.onuray.midax.data.remote.dto.StockDto
 
-fun StockDto.toEntity(): StockEntity =
-    StockEntity(
+fun StockDto.toEntity(): StockEntity? {
+    val symbol = this.symbol ?: return null
+    return StockEntity(
         symbol = symbol,
-        name = description ?: "symbol",
+        name = description ?: symbol,
         currency = currency,
         logoUrl = null,
     )
+}
 
 fun QuoteDto.toEntity(symbol: String): QuoteEntity =
     QuoteEntity(
