@@ -2,7 +2,8 @@ package com.onuray.midax.ui.screen.detail
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.gestures.awaitFirstDown
+import androidx.compose.foundation.gestures.forEachGesture
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -200,17 +201,24 @@ private fun StockChart(
             .height(200.dp)
             .padding(horizontal = 16.dp, vertical = 8.dp)
             .pointerInput(Unit) {
-                detectTapGestures(
-                    onPress = { offset ->
+                forEachGesture {
+                    awaitPointerEventScope {
+                        val down = awaitFirstDown(requireUnconsumed = false)
                         onScrubStateChanged(true)
-                        touchX = offset.x
-                        awaitRelease()
-                        touchX = null
+                        touchX = down.position.x
+
+                        do {
+                            val event = awaitPointerEvent()
+                            touchX = event.changes.first().position.x
+                            event.changes.forEach { it.consume() }
+                        } while (event.changes.any { it.pressed })
+
                         onScrubStateChanged(false)
+                        touchX = null
                         onCandleSelected(null)
-                    },
-                )
-            }) {
+                    }
+                }
+            }) { 
             val path = Path()
             var selectedIndex: Int? = null
             candles.forEachIndexed { index, candle ->

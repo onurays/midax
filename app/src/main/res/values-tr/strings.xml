@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Midax</string>
+    <string name="main_top_bar_title">Midax</string>
+    <string name="stock_list_empty_message">Hisseler okunuyor…</string>
+    <string name="back_button_content_description">Geri</string>
+    <string name="related_news_header">İlgili Haberler</string>
+    <string name="no_news_found">Bu hisse için bir haber mevcut değil.</string>
+</resources>
