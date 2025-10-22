@@ -10,13 +10,12 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface NewsDao {
 
-    @Query("""
-        SELECT * FROM news
-        WHERE symbol = :symbol
-        ORDER BY publishedAtSec DESC
-    """)
-    fun observeForSymbol(symbol: String): Flow<List<NewsEntity>>
+    @Query("SELECT * FROM news WHERE symbol = :symbol ORDER BY publishedAtSec DESC")
+    fun observeAll(symbol: String): Flow<List<NewsEntity>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun upsertAll(items: List<NewsEntity>)
+
+    @Query("DELETE FROM news WHERE symbol = :symbol")
+    suspend fun deleteAll(symbol: String)
 }

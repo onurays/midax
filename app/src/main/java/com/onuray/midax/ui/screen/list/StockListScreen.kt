@@ -32,17 +32,18 @@ import java.util.Locale
 
 @Composable
 fun StockListScreen(
+    modifier: Modifier = Modifier,
     stockListStateFlow: StateFlow<List<UIStockItem>>,
     onItemClick: (String) -> Unit,
 ) {
     val stockList by stockListStateFlow.collectAsStateWithLifecycle()
 
     if (stockList.isEmpty()) {
-        EmptyLoading()
+        EmptyLoading(modifier)
         return
     }
 
-    LazyColumn(Modifier.fillMaxWidth()) {
+    LazyColumn(modifier.fillMaxWidth()) {
         items(stockList.size) { index ->
             StockRow(stockList[index], onItemClick)
             HorizontalDivider()
@@ -87,8 +88,15 @@ private fun StockRow(
 }
 
 @Composable
-private fun EmptyLoading() {
-    Box(modifier = Modifier.fillMaxWidth()) {
+fun formatPrice(price: Double): String {
+    val bd = BigDecimal(price)
+    // TODO. Ask / investigate if it is ok to show 23.456 as 23.46
+    return bd.setScale(2, RoundingMode.HALF_UP).toPlainString()
+}
+
+@Composable
+private fun EmptyLoading(modifier: Modifier = Modifier) {
+    Box(modifier = modifier.fillMaxWidth()) {
         Column(
             modifier = Modifier.align(Alignment.Center),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -98,10 +106,4 @@ private fun EmptyLoading() {
             Text(stringResource(R.string.stock_list_empty_message))
         }
     }
-}
-
-private fun formatPrice(price: Double): String {
-    val bd = BigDecimal(price)
-    // TODO. Ask / investigate if it is ok to show 23.456 as 23.46
-    return bd.setScale(2, RoundingMode.HALF_UP).toPlainString()
 }

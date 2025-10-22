@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">Midax</string>
     <string name="main_top_bar_title">Midax</string>
-    <string name="stock_list_empty_message">Market verisi hazırlanıyor…</string>
+    <string name="stock_list_empty_message">Loading stocks…</string>
+    <string name="back_button_content_description">Back</string>
+    <string name="related_news_header">Related News</string>
+    <string name="no_news_found">No news found for this stock.</string>
 </resources>
