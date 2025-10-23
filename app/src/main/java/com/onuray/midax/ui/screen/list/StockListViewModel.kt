@@ -33,7 +33,7 @@ class StockListViewModel @Inject constructor(
                         name = it.name,
                         price = it.price ?: 0.0,
                         change = it.changePct ?: 0.0,
-                        isRising = (it.changePct ?: 0.0) >= 0.0,
+                        isRising = (it.changePct ?: 0.0) > 0.0,
                     )
                 }
             }

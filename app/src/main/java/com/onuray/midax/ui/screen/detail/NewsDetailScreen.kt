@@ -1,6 +1,9 @@
 package com.onuray.midax.ui.screen.detail
 
 import android.graphics.Bitmap
+import android.webkit.WebResourceError
+import android.webkit.WebResourceRequest
+import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.compose.foundation.layout.Box
@@ -22,7 +25,6 @@ import androidx.compose.ui.viewinterop.AndroidView
 @Composable
 fun NewsDetailScreen(
     newsUrl: String,
-    onBack: () -> Unit
 ) {
     var isLoading by remember { mutableStateOf(true) }
 
@@ -44,6 +46,7 @@ fun NewsDetailScreen(
                         isLoading = false
                     }
                 }
+                settings.javaScriptEnabled = true
                 loadUrl(newsUrl)
             }
         })

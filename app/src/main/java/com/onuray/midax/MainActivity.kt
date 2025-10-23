@@ -88,7 +88,7 @@ private fun Midax() {
                 arguments = listOf(navArgument("newsUrl") { type = NavType.StringType })
             ) { backStackEntry ->
                 val newsUrl = backStackEntry.arguments?.getString("newsUrl") ?: ""
-                NewsDetailScreen(newsUrl = newsUrl, onBack = { nav.popBackStack() })
+                NewsDetailScreen(newsUrl = newsUrl)
             }
         }
     }
